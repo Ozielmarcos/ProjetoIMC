@@ -23,14 +23,13 @@ const Usuarios = sequelize.define(
       allowNull: false,
       set(value) {
         // Faz o hash da senha antes que ela seja inserida no banco de dados
-        // Docs: https://sequelize.org/docs/v6/core-concepts/getters-setters-virtuals/#setters
+
         this.setDataValue('senha', hashSenha(value));
       },
     },
   },
-  {
-    // Docs: https://sequelize.org/docs/v6/core-concepts/model-basics
 
+  {
     // cria index único para impedir que e-mails duplicados sejam cadastrados
     indexes: [
       {

@@ -9,9 +9,9 @@ const {
 
 const router = express.Router();
 
-/**
- * Cadastro de tarefas para o usuário logado
- */
+
+//Cadastro de tarefas para o usuário logado
+
 router.post(
   '/',
   middlewareAutenticacao,
@@ -23,7 +23,7 @@ router.post(
 
     try {
       const { usuarioLogado, body } = req;
-      
+
       const { titulo, concluida } = body;
 
       const tarefa = await Tarefas.create({
@@ -34,7 +34,6 @@ router.post(
 
       res.status(201).json(tarefa);
 
-      // TODO: implementar aqui
     } catch (error) {
       console.warn(error);
       res.status(500).send();
@@ -42,16 +41,16 @@ router.post(
   },
 );
 
-/**
- * Consulta de tarefas do usuário logado
- */
+
+// Consulta de tarefas do usuário logado
+
 router.get(
   '/',
   middlewareAutenticacao,
   async (req, res) => {
     try {
       const { usuarioLogado } = req;
-      
+
       const tarefas = await Tarefas.findAll({
         where: {
           usuario_id: usuarioLogado.id,
@@ -59,7 +58,7 @@ router.get(
       });
 
       res.status(200).json(tarefas)
-    
+
     } catch (error) {
       console.warn(error);
       res.status(500).send();
@@ -67,9 +66,8 @@ router.get(
   },
 );
 
-/**
- * Retorna tarefa por ID do usuário logado
- */
+// Retorna tarefa por ID do usuário logado
+
 router.get(
   '/:tarefaId',
   middlewareAutenticacao,
@@ -77,7 +75,7 @@ router.get(
     try {
       const { usuarioLogado, params } = req;
 
-      
+
       const { tarefaId } = params;
 
       const tarefa = await Tarefas.findOne({
@@ -87,14 +85,13 @@ router.get(
         },
       });
 
-      if(!tarefa) {
+      if (!tarefa) {
         res.status(404).send('Tarefa não encontrada');
         return;
       }
 
       res.status(200).json(tarefa);
 
-      // TODO: implementar aqui
     } catch (error) {
       console.warn(error);
       res.status(500).send();
@@ -102,18 +99,7 @@ router.get(
   },
 );
 
-/**
- * Atualiza a tarefa alterando o valor da coluna "concluida" para true ou false.
- *
- * Em caso de sucesso retorna o objeto da tarefa atualizada.
- *
- * Caso não encontre a tarefa retorna "null".
- *
- * @param {number} usuarioId
- * @param {number} tarefaId
- * @param {boolean} concluida
- * @returns {object|null}
- */
+
 const atualizaSituacaoTarefa = async (usuarioId, tarefaId, concluida) => {
   const tarefa = await Tarefas.findOne({
     where: {
@@ -126,19 +112,18 @@ const atualizaSituacaoTarefa = async (usuarioId, tarefaId, concluida) => {
     return null;
   }
 
-  /**
-   * Atualiza o valor da coluna "concluida"
-   * Docs: https://sequelize.org/docs/v6/core-concepts/model-instances/#updating-an-instance
-   */
+
+  // Atualiza o valor da coluna "concluida"
+
   tarefa.concluida = concluida;
   await tarefa.save();
 
   return tarefa;
 };
 
-/**
- * Marca a tarefa do usuário como concluída
- */
+
+// Marca a tarefa do usuário como concluída
+
 router.put(
   '/:tarefaId/concluida',
   middlewareAutenticacao,
@@ -148,16 +133,16 @@ router.put(
 
       const { tarefaId } = params;
 
-      const tarefa =  await atualizaSituacaoTarefa(usuarioLogado.id, tarefaId, true);
+      const tarefa = await atualizaSituacaoTarefa(usuarioLogado.id, tarefaId, true);
 
-      if(!tarefa) {
+      if (!tarefa) {
         res.status(404).json('Tarefa não encontrada');
         return;
       }
 
       res.status(200).json(tarefa);
 
-      // TODO: implementar aqui
+
     } catch (error) {
       console.warn(error);
       res.status(500).send();
@@ -165,9 +150,9 @@ router.put(
   },
 );
 
-/**
- * Marca a tarefa do usuário como pendente
- */
+
+// Marca a tarefa do usuário como pendente
+
 router.put(
   '/:tarefaId/pendente',
   middlewareAutenticacao,
@@ -177,15 +162,15 @@ router.put(
 
       const { tarefaId } = params;
 
-      const tarefa =  await atualizaSituacaoTarefa(usuarioLogado.id, tarefaId, false);
+      const tarefa = await atualizaSituacaoTarefa(usuarioLogado.id, tarefaId, false);
 
-      if(!tarefa) {
+      if (!tarefa) {
         res.status(404).json('Tarefa não encontrada');
         return;
       }
 
       res.status(200).json(tarefa);
-      // TODO: implementar aqui
+
     } catch (error) {
       console.warn(error);
       res.status(500).send();
@@ -193,9 +178,9 @@ router.put(
   },
 );
 
-/**
- * Atualiza os dados da tarefa do usuário de forma parcial
- */
+
+// Atualiza os dados da tarefa do usuário de forma parcial
+
 router.patch(
   '/:tarefaId',
   middlewareAutenticacao,
@@ -211,7 +196,7 @@ router.patch(
       const { tarefaId } = params;
       const { titulo, concluida } = body;
 
-      const result = await Tarefas.update({titulo,concluida},
+      const result = await Tarefas.update({ titulo, concluida },
         {
           where: {
             id: tarefaId,
@@ -219,23 +204,23 @@ router.patch(
           },
         });
 
-        const registroAtualizados = result[0];
-       
-        const tarefa = await Tarefas.findOne({
-          where: {
-            id: tarefaId,
-            usuario_id: usuarioLogado.id,
-          },
-        });
+      const registroAtualizados = result[0];
 
-        if (!registroAtualizados) {
-          res.status(404).send('Tarefa não encontrada');
-          return;
-        }
+      const tarefa = await Tarefas.findOne({
+        where: {
+          id: tarefaId,
+          usuario_id: usuarioLogado.id,
+        },
+      });
+
+      if (!registroAtualizados) {
+        res.status(404).send('Tarefa não encontrada');
+        return;
+      }
 
 
-        res.status(200).json(tarefa);
-      // TODO: implementar aqui
+      res.status(200).json(tarefa);
+
     } catch (error) {
       console.warn(error);
       res.status(500).send();
@@ -244,15 +229,14 @@ router.patch(
 );
 
 // Rota de esclusão de tarefas
-// Delete/tarefas/1
 
 router.delete(
   '/:tarefaId',
   middlewareAutenticacao,
-  async (req,res) => {
+  async (req, res) => {
     try {
-      const {usuarioLogado, params} = req;
-      const {tarefaId} = params;
+      const { usuarioLogado, params } = req;
+      const { tarefaId } = params;
 
       const result = await Tarefas.destroy({
         where: {
@@ -260,8 +244,8 @@ router.delete(
           usuario_id: usuarioLogado.id,
         },
       });
-      
-      if(!result) {
+
+      if (!result) {
         res.status(404).send('Tarefa não encontrada');
         return;
       }

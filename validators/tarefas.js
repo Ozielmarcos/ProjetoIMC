@@ -2,7 +2,6 @@ const { checkSchema } = require('express-validator');
 
 const validadorCadastroTarefa = checkSchema(
   {
-    // TODO: implementar validação
     titulo: {
       notEmpty: {
         errorMessage: 'O título é obrigatório',

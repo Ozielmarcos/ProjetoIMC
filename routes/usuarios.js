@@ -20,10 +20,9 @@ function erroEmailDuplicado(error) {
   ));
 }
 
-/**
- * Cadastro de usuários
- * /usuarios
- */
+
+// Cadastro de usuários
+
 router.post(
   '/',
   validadorCadastroUsuario,
@@ -43,7 +42,7 @@ router.post(
 
       const usuario = await Usuarios.findByPk(resultado.get('id'));
       res.status(201).json(usuario);
-      
+
     } catch (error) {
       console.warn(error);
       if (erroEmailDuplicado(error)) {
@@ -55,10 +54,9 @@ router.post(
   },
 );
 
-/**
- * Login de usuários
- * /usuarios/login
- */
+
+// Login de usuários
+
 router.post(
   '/login',
   validadorLogin,

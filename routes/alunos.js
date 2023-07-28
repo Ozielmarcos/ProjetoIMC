@@ -7,8 +7,6 @@ const { validadorCadastroAluno, validadorAtualizacaoAluno, } = require('../valid
 const { classificarIMC, calcularIMC } = require('../utils/imc');
 
 const router = express.Router();
-
-
 //Cadastro de tarefas para o usuário logado
 
 router.post(
@@ -19,7 +17,6 @@ router.post(
     if (checarResultadoValidacao(req, res)) {
       return;
     }
-
     try {
       const { professorLogado, body } = req;
 
@@ -47,10 +44,7 @@ router.post(
     }
   },
 );
-
-
 // Consulta de tarefas do usuário logado
-
 router.get(
   '/',
   middlewareAutenticacao,
@@ -72,16 +66,13 @@ router.get(
     }
   },
 );
-
 // Retorna tarefa por ID do usuário logado
-
 router.get(
   '/:alunoId',
   middlewareAutenticacao,
   async (req, res) => {
     try {
       const { professorLogado, params } = req;
-
 
       const { alunoId } = params;
 
@@ -105,9 +96,7 @@ router.get(
     }
   },
 );
-
 // Atualiza os dados da tarefa do usuário de forma parcial
-
 router.patch(
   '/:alunoId',
   middlewareAutenticacao,
@@ -116,18 +105,13 @@ router.patch(
     if (checarResultadoValidacao(req, res)) {
       return;
     }
-
     try {
       const { professorLogado, body, params } = req;
-
       const { alunoId } = params;
 
       const { nome, email, sexo, idade, peso, altura, } = body;
-
       const imc = calcularIMC(peso, altura);
-
       const classificacao = classificarIMC(imc);
-
       const avaliacao = new Date();
 
       await Alunos.update({
@@ -166,9 +150,7 @@ router.patch(
     }
   }
 );
-
 // Rota de esclusão de tarefas
-
 router.delete(
   '/:alunoId',
   middlewareAutenticacao,
@@ -200,7 +182,6 @@ router.delete(
       console.warn(e);
       res.status(500).send();
     }
-
   }
 );
 

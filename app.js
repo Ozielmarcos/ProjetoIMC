@@ -10,9 +10,6 @@ const alunosRouter = require('./routes/alunos');
 
 const app = express();
 
-// Configura o CORS para permitir requests quando o backend
-// está rodando em um endereço diferente do frontend
-
 app.use(cors({
   origin: [
     // Libera acesso local

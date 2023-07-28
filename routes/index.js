@@ -4,7 +4,7 @@ const sequelize = require('../database/sequelize');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send('As rotas disponíveis são "/usuarios" e "/tarefas".');
+  res.send('As rotas disponíveis são "/professores" e "/alunos".');
 });
 
 router.get('/healthcheck', async (req, res) => {

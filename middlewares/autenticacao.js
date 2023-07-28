@@ -1,4 +1,4 @@
-const Usuarios = require('../models/Usuarios');
+const Professor = require('../models/Professores');
 const { validarTokenUsuario } = require('../utils/token');
 
 const obtemTokenAutenticacao = (authorization) => {
@@ -19,14 +19,14 @@ const middlewareAutenticacao = async (request, response, next) => {
   try {
     const payload = validarTokenUsuario(token);
 
-    const usuario = await Usuarios.findByPk(payload.id);
+    const professor = await Professor.findByPk(payload.id);
 
-   if(!usuario) {
-    response.status(401).send('Usuário não autorizado.');
-    return;
-   }
+    if (!professor) {
+      response.status(401).send('Professor não autorizado.');
+      return;
+    }
 
-   request.usuarioLogado = usuario.toJSON();
+    request.professorLogado = professor.toJSON();
 
     next();
   } catch (error) {

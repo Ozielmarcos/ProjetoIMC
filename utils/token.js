@@ -5,7 +5,7 @@ const { JWT_TOKEN } = process.env;
 
 // Gera o token JWT para o usuário com validade de 7 dias.
 
-const gerarTokenUsuario = (usuario) => jwt.sign(usuario, JWT_TOKEN, {
+const gerarTokenUsuario = (professor) => jwt.sign(professor, JWT_TOKEN, {
   expiresIn: '7d',
 });
 

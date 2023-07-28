@@ -1,11 +1,11 @@
 const express = require('express');
 const { ValidationError } = require('sequelize');
 
-const Usuarios = require('../models/Usuarios');
+const Professores = require('../models/Professores');
 const { compararSenha } = require('../utils/senha');
 const { gerarTokenUsuario } = require('../utils/token');
 const { checarResultadoValidacao } = require('../validators');
-const { validadorLogin, validadorCadastroUsuario } = require('../validators/usuarios');
+const { validadorLogin, validadorCadastroUsuario } = require('../validators/professor');
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ function erroEmailDuplicado(error) {
 // Cadastro de usuários
 
 router.post(
-  '/',
+  '/cadastro',
   validadorCadastroUsuario,
   async (req, res) => {
     if (checarResultadoValidacao(req, res)) {
@@ -34,14 +34,14 @@ router.post(
     try {
       const { nome, email, senha } = req.body;
 
-      const resultado = await Usuarios.create({
+      const resultado = await Professores.create({
         nome,
         email,
         senha,
       });
 
-      const usuario = await Usuarios.findByPk(resultado.get('id'));
-      res.status(201).json(usuario);
+      const professor = await Professores.findByPk(resultado.get('id'));
+      res.status(201).json(professor);
 
     } catch (error) {
       console.warn(error);
@@ -68,30 +68,30 @@ router.post(
     try {
       const { email, senha } = req.body;
 
-      const usuario = await Usuarios.unscoped().findOne({
+      const professor = await Professores.unscoped().findOne({
         where: {
           email,
         },
       });
 
-      if (!usuario) {
+      if (!professor) {
         res.status(401).send('Credenciais inválidas');
         return;
       }
 
-      if (!compararSenha(senha, usuario.get('senha'))) {
+      if (!compararSenha(senha, professor.get('senha'))) {
         res.status(401).send('Credenciais inválidas');
         return;
       }
 
-      const usuarioJson = usuario.toJSON();
-      delete usuarioJson.senha;
+      const professorJson = professor.toJSON();
+      delete professorJson.senha;
 
-      const token = gerarTokenUsuario(usuarioJson);
+      const token = gerarTokenUsuario(professorJson);
 
       res.status(200).json({
         token,
-        usuario: usuarioJson,
+        usuario: professorJson,
       });
     } catch (error) {
       console.warn(error);

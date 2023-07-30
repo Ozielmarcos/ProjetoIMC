@@ -7,7 +7,6 @@ const { validadorCadastroAluno, validadorAtualizacaoAluno, } = require('../valid
 const { classificarIMC, calcularIMC } = require('../utils/imc');
 
 const router = express.Router();
-//Cadastro de tarefas para o usuário logado
 
 router.post(
   '/',
